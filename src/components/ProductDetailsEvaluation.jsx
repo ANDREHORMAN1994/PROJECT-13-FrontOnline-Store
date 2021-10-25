@@ -37,43 +37,51 @@ class ProductDetailsEvaluation extends React.Component {
   render() {
     const { email, note, message, assessments } = this.state;
     return (
-      <div className="product-evaluation">
-        <h3 className="evaluation-title">Avaliações</h3>
-        <div>
-          <div className="evaluation-fields">
+      <div className='product-evaluation'>
+        <h3 className='evaluation-title'>Avaliações</h3>
+        <div className='avaliabe-form-container'>
+          <div className='evaluation-fields'>
             <input
-              type="email"
-              name="email"
-              value={ email }
-              onChange={ this.handleEvaluationChange }
-              placeholder="Email"
+              type='email'
+              name='email'
+              value={email}
+              onChange={this.handleEvaluationChange}
+              placeholder='Email'
+              className="input-email"
             />
-            <input
-              type="number"
-              name="note"
-              value={ note }
-              onChange={ this.handleEvaluationChange }
-              min={ 0 }
-              max={ 5 }
-            />
+            <label htmlFor='note'>
+              Nota
+              <input
+                type='number'
+                name='note'
+                value={note}
+                onChange={this.handleEvaluationChange}
+                min={0}
+                max={5}
+                id="note"
+              />
+            </label>
           </div>
-          <div className="evaluation-fields">
+          <div className='evaluation-fields'>
             <textarea
-              name="message"
-              placeholder="Mensagem (opcional)"
-              value={ message }
-              onChange={ this.handleEvaluationChange }
-              data-testid="product-detail-evaluation"
+              name='message'
+              placeholder='Mensagem (opcional)'
+              value={message}
+              onChange={this.handleEvaluationChange}
+              data-testid='product-detail-evaluation'
             />
           </div>
-          <button type="button" onClick={ this.saveEvaluation }>
+          <button
+            type='button'
+            onClick={this.saveEvaluation}
+            className='avaliable-button'>
             Avaliar
           </button>
         </div>
         <div>
-          {
-            assessments.map((item) => (<Assessment key={ item.email } props={ item } />))
-          }
+          {assessments.map(item => (
+            <Assessment key={item.email} props={item} />
+          ))}
         </div>
       </div>
     );

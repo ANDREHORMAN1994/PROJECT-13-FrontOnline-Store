@@ -6,6 +6,7 @@ import '../App.css';
 import Loading from '../components/Loading';
 import TopBar from '../components/TopBar';
 import Logo from '../images/clube-dos-4.png';
+import Lupa from '../images/lupa.png';
 
 class Home extends React.Component {
   constructor() {
@@ -14,6 +15,7 @@ class Home extends React.Component {
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.fetchQueryAndCategoryId = this.fetchQueryAndCategoryId.bind(this);
     this.sendCategoryId = this.sendCategoryId.bind(this);
+    this.saveNewProduct = this.saveNewProduct.bind(this);
 
     this.state = {
       newSearch: '',
@@ -21,7 +23,21 @@ class Home extends React.Component {
       searchProducts: [],
       categoryId: ' ',
       loading: false,
+      carProducts: 0,
     };
+  }
+
+  componentDidMount() {
+    const products = JSON.parse(localStorage.getItem('cartItems'));
+    if (products) {
+      this.saveNewProduct(products);
+    }
+  }
+
+  saveNewProduct(carProducts) {
+    let count = 0;
+    carProducts.forEach(item => (count += item.qtdItem));
+    this.setState({ carProducts: count });
   }
 
   handleSearchChange({ target }) {
@@ -63,50 +79,55 @@ class Home extends React.Component {
   }
 
   render() {
-    const { newSearch, searchKey, categoryId, searchProducts, loading } = this.state;
+    const {
+      newSearch,
+      searchKey,
+      categoryId,
+      searchProducts,
+      loading,
+      carProducts,
+    } = this.state;
     return (
-      <div className="home-container">
-        <div className="home-aside-container">
-          <img
-            alt="logo"
-            src={ Logo }
-            width={ 200 }
-          />
-          <ListCategory sendCategoryId={ this.sendCategoryId } />
+      <div className='home-container'>
+        <div className='home-aside-container'>
+          <img alt='logo' src={Logo} width={200} />
+          <ListCategory sendCategoryId={this.sendCategoryId} />
         </div>
-        <div className="home-search-container">
-          <div className="search-subcontainer">
-            <TopBar />
-            <div className="search-bar-container">
+        <div className='home-search-container'>
+          <div className='search-subcontainer'>
+            <TopBar carProducts={carProducts} />
+            <div className='search-bar-container'>
               <input
-                name="searchKey"
-                type="text"
-                value={ searchKey }
-                onChange={ this.handleSearchChange }
-                data-testid="query-input"
+                name='searchKey'
+                type='text'
+                value={searchKey}
+                onChange={this.handleSearchChange}
+                data-testid='query-input'
               />
               <button
-                className="search-button"
-                type="button"
-                onClick={ this.fetchQueryAndCategoryId }
-                data-testid="query-button"
-              >
-                <img alt="Buscar" src="https://icon-library.net//images/icon-magnifying-glass/icon-magnifying-glass-10.jpg" />
+                className='search-button'
+                type='button'
+                onClick={this.fetchQueryAndCategoryId}
+                data-testid='query-button'>
+                <img alt='Buscar' src={Lupa} />
               </button>
             </div>
-            <h3 data-testid="home-initial-message">
+            <h3
+              data-testid='home-initial-message'
+              style={{ textAlign: 'center' }}>
               Digite algum termo de pesquisa ou escolha uma categoria.
             </h3>
-            <div className="item-cards-container">
+            <div className='item-cards-container'>
               {loading ? (
                 <Loading />
               ) : (
-                searchProducts.map((item) => (
+                searchProducts.map(item => (
                   <CardProduct
-                    key={ item.id }
-                    item={ item }
-                    categoryId={ categoryId }
-                    searchKey={ newSearch === '' ? ' ' : newSearch }
+                    key={item.id}
+                    item={item}
+                    categoryId={categoryId}
+                    searchKey={newSearch === '' ? ' ' : newSearch}
+                    saveNewProduct={this.saveNewProduct}
                   />
                 ))
               )}
